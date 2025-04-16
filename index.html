@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MRMR ❤️</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      color: #333;
+    }
+    .top-right-note {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      background-color: rgba(255, 133, 162, 0.8);
+      padding: 10px 15px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .box {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #ff85a2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin: 10px;
+    }
+    button:hover:enabled {
+      background-color: #ff638b;
+    }
+    button:disabled {
+      background-color: #f5b4c0;
+      cursor: not-allowed;
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-right-note">To my lil MRMR ❤️</div>
+
+  <div class="box" id="step1">
+    <h1>Welcome to ur page MRMR u wanna play a game^^? </h1>
+    <button onclick="nextStep()">Yes</button>
+  </div>
+
+  <div class="box" id="step2" style="display: none;">
+    <h1>Are you happy^^ ?</h1>
+    <button onclick="nextStep2(true)">Yes</button>
+    <button onclick="nextStep2(false)">No</button>
+  </div>
+
+  <div class="box" id="gameLevels" style="display: none;">
+    <h1>Choose your level^^</h1>
+    <button id="level1" onclick="startLevel(1)">Level 1</button>
+    <button id="level2" onclick="startLevel(2)" disabled>Level 2 🔒</button>
+    <button id="level3" onclick="startLevel(3)" disabled>Level 3 🔒</button>
+  </div>
+
+  <div class="box" id="level1Content" style="display: none;">
+    <h1 id="complimentText">You're amazing just the way you are 💖</h1>
+    <button onclick="nextCompliment()">Next</button>
+  </div>
+
+  <div class="box" id="level2Content" style="display: none;">
+    <h1 id="wordClue">Guess the word 🧠</h1>
+    <input type="text" id="wordInput" placeholder="Type your guess here">
+    <br>
+    <button onclick="submitWord()">Submit</button>
+  </div>
+
+  <div class="box" id="level3Content" style="display: none;">
+    <h1 id="level3Title">Are you ready? 😳</h1>
+    <button id="nextButton" onclick="nextLevel3Step()">Next</button>
+  </div>
+
+  <script>
+    let complimentIndex = 0;
+    const compliments = [
+      "You're amazing just the way you are 💖",
+      "You light up every corner in my life ✨",
+      "You are the reason of making my day😊"
+    ];
+
+    const words = [
+      { clue: "It's a small fluffy friend that says 'meow' 🐱", answer: "cat" },
+      { clue: "It bright at night and floating between stars 'start with m and end with mrmr'🫵🏻", answer: "mrmr" },
+      { clue: "A tiny dessert as sweet as you 🍰", answer: "cake" }
+    ];
+    let wordIndex = 0;
+    let level3Step = 0;
+
+    function nextStep() {
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'block';
+    }
+
+    function nextStep2(happy) {
+      if (happy) {
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('gameLevels').style.display = 'block';
+      } else {
+        alert("Happiness is required to play the game 😢 Come back when you're smiling 💖");
+      }
+    }
+
+    function startLevel(level) {
+      document.getElementById('gameLevels').style.display = 'none';
+
+      if (level === 1) {
+        complimentIndex = 0;
+        document.getElementById('complimentText').innerText = compliments[complimentIndex];
+        document.getElementById('level1Content').style.display = 'block';
+      } else if (level === 2) {
+        wordIndex = 0;
+        document.getElementById('wordClue').innerText = words[wordIndex].clue;
+        document.getElementById('wordInput').value = '';
+        document.getElementById('level2Content').style.display = 'block';
+      } else if (level === 3) {
+        level3Step = 0;
+        document.getElementById('level3Title').innerText = "Are you ready? 😳";
+        document.getElementById('level3Content').style.display = 'block';
+      }
+    }
+
+    function nextCompliment() {
+      complimentIndex++;
+      if (complimentIndex < compliments.length) {
+        document.getElementById('complimentText').innerText = compliments[complimentIndex];
+      } else {
+        alert("You completed Level 1! 🎉");
+        document.getElementById('level1Content').style.display = 'none';
+        document.getElementById('gameLevels').style.display = 'block';
+        document.getElementById('level2').disabled = false;
+        document.getElementById('level2').innerText = 'Level 2';
+      }
+    }
+
+    function submitWord() {
+      const guess = document.getElementById('wordInput').value.trim().toLowerCase();
+      const current = words[wordIndex];
+
+      if (guess === current.answer) {
+        wordIndex++;
+        if (wordIndex < words.length) {
+          document.getElementById('wordClue').innerText = words[wordIndex].clue;
+          document.getElementById('wordInput').value = '';
+        } else {
+          alert("You completed Level 2! 🎉");
+          document.getElementById('level2Content').style.display = 'none';
+          document.getElementById('gameLevels').style.display = 'block';
+          document.getElementById('level3').disabled = false;
+          document.getElementById('level3').innerText = 'Level 3';
+        }
+      } else {
+        alert("Try again! That's not quite it 💡");
+      }
+    }
+
+    function nextLevel3Step() {
+      level3Step++;
+      const nextButton = document.getElementById('nextButton');
+
+      if (level3Step === 1) {
+        document.getElementById('level3Title').innerText = "Warning ⚠️ This level is very hard and dangerous!";
+      } else if (level3Step === 2) {
+        document.getElementById('level3Title').innerHTML = `Press It^^`;
+        nextButton.innerText = "Here";
+        nextButton.onclick = function() {
+          window.location.href = "final.html";
+        };
+      }
+    }
+  </script>
+</body>
+</html>
